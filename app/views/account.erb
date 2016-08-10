@@ -1,5 +1,19 @@
-<h1>Welcome</h1>
+<h1>Welcome <%= @user.username %></h1>
+<h3>Your current balance: <%= @user.balance %></h3>
 
-<p>We are currently working on your account.</p>
+<form action="/balance/<%= @user.id %>" method="POST">
+  <input id="hidden" type="hidden" name="_method" value="patch">
+  <p>
+    <label>Add Coins: </label>
+    <input type="radio" name="coins" value="add" checked>
+    <label>Remove Coins: </label>
+    <input type="radio" name="coins" value="remove">
+  </p>
+  <p>
+    <label for="amount">Amount: </label>
+    <input type="integer" name="user[balance]">
+  </p>
+  <input type="submit" value="Submit">
+</form>
 
 <p><a href="/logout">Log Out</a></p>
