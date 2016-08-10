@@ -51,8 +51,31 @@ class ApplicationController < Sinatra::Base
     end
   end
 
+  # THIS ISNT WORKING!!
+  patch "/bal_update" do
+    @user = current_user
+    if params[:coins] == "add"
+      new_bal = @user.balance + params[:user][:amount].to_f
+      @user.update(balance: new_bal)
+    elsif params[:coins] == "remove" && params[:user][:amount] > @user.balance
+      session[:warning] = "Failure"
+      redirect 't_failure'
+    else
+      new_bal = @user.balance - params[:user][:amount].to_f
+      @user.update(balance: new_bal)
+    end
+    @user.save
+    binding.pry
+    redirect 'account'
+  end
+
   get "/failure" do
     erb :failure
+  end
+
+  get '/t_failure' do
+    @warning = session[:t_failure]
+    erb :account
   end
 
   get "/logout" do

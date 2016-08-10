@@ -1,7 +1,11 @@
 <h1>Welcome <%= @user.username %></h1>
 <h3>Your current balance: <%= @user.balance %></h3>
 
-<form action="/balance/<%= @user.id %>" method="POST">
+<% if @warning %>
+  <h2><%= @warning %>, Not enough funds!</h2>
+<% end %>
+
+<form action="/bal_update" method="POST">
   <input id="hidden" type="hidden" name="_method" value="patch">
   <p>
     <label>Add Coins: </label>
@@ -11,7 +15,7 @@
   </p>
   <p>
     <label for="amount">Amount: </label>
-    <input type="integer" name="user[balance]">
+    <input type="number" name="user[amount]">
   </p>
   <input type="submit" value="Submit">
 </form>
