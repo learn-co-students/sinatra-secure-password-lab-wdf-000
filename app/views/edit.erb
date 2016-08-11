@@ -1,0 +1,17 @@
+<h2>Use the below controls to edit your balance</h2>
+<h3>Your Current balance is: <%= @user.balance %></h3>
+
+<form action="/bal_update" method="POST">
+  <input id="hidden" type="hidden" name="_method" value="patch">
+  <p>
+    <label>Add Coins: </label>
+    <input type="radio" name="coins" value="add" checked>
+    <label>Remove Coins: </label>
+    <input type="radio" name="coins" value="remove">
+  </p>
+  <p>
+    <label for="amount">Amount: </label>
+    <input type="number" name="user[amount]">
+  </p>
+  <input type="submit" value="Submit">
+</form>
