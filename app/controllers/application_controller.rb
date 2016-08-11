@@ -18,10 +18,8 @@ class ApplicationController < Sinatra::Base
   end
 
   post "/signup" do
-    user = User.new(:username => params[:username], :password => params[:password])
+    user = User.new(:username => params[:username], :password => params[:password], :balance => 0.0)
     if user.save
-      user.balance = 0
-      user.save
       redirect '/login'
     else
       redirect '/failure'
@@ -51,21 +49,30 @@ class ApplicationController < Sinatra::Base
     end
   end
 
-  # THIS ISNT WORKING!!
+  get '/edit' do
+    if logged_in?
+      @user = current_user
+      erb :edit
+    else
+      redirect "/login"
+    end
+  end
+
+  # Bonus code
   patch "/bal_update" do
     @user = current_user
+    # have to set password explicitly to prevent transacton rollback!
+    # this is due to current_user returning a field called password_digest NOT password!
+    @user.password = @user.password_digest
     if params[:coins] == "add"
-      new_bal = @user.balance + params[:user][:amount].to_f
-      @user.update(balance: new_bal)
-    elsif params[:coins] == "remove" && params[:user][:amount] > @user.balance
+      @user.balance = @user.balance + params[:user][:amount].to_f
+    elsif params[:coins] == "remove" && params[:user][:amount].to_f > @user.balance
       session[:warning] = "Failure"
       redirect 't_failure'
     else
-      new_bal = @user.balance - params[:user][:amount].to_f
-      @user.update(balance: new_bal)
+      @user.balance = @user.balance - params[:user][:amount].to_f
     end
     @user.save
-    binding.pry
     redirect 'account'
   end
 
@@ -73,8 +80,10 @@ class ApplicationController < Sinatra::Base
     erb :failure
   end
 
+  # Bonus code
   get '/t_failure' do
-    @warning = session[:t_failure]
+    @user = current_user
+    @warning = session[:warning]
     erb :account
   end
 
