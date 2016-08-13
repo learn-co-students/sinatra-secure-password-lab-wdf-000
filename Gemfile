@@ -10,10 +10,12 @@ gem 'require_all'
 gem 'capybara'
 gem "rack_session_access"
 gem 'rack-test'
+gem 'sqlite3'
 
 group :development do
   gem "pry"
   gem "sqlite3"
   gem "rspec"
   gem "tux"
+  gem "shotgun"
 end

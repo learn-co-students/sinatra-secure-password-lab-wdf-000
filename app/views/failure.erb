@@ -1,2 +1,7 @@
 <h1>Flatiron Bank Error</h1>
-<p>It seems there was a problem. Please return to <a href="/">the home page</a> and try again.</p>
+<%if @session[:over_drawn].nil?%>
+  <p>It seems there was a problem. Please return to <a href="/">the home page</a> and try again.</p>
+<%else%>
+  <p>Not enough funds. Please review your <a href = "/account"> balance</a> and try again.</p>
+  <p><img src="https://i.imgflip.com/10a1k7.jpg"></p>  
+<%end%>
