@@ -1,7 +1,10 @@
 <h1>Flatiron Bank Error</h1>
-<%if @session[:over_drawn].nil?%>
+<%if @session[:incorrect_auth]%>
+  <p>Oops! Incorrect password. Please return to your <a href = "/account"> account</a> and try again.</p>
+  <p><img src="http://v030o.popscreen.com/eHBjenZrMTI=_o_donald-duck-naked.jpg" width = 200px></p>  
+<%elsif @session[:over_drawn].nil?%>
   <p>It seems there was a problem. Please return to <a href="/">the home page</a> and try again.</p>
 <%else%>
   <p>Not enough funds. Please review your <a href = "/account"> balance</a> and try again.</p>
-  <p><img src="https://i.imgflip.com/10a1k7.jpg"></p>  
+  <p><img src="https://i.imgflip.com/10a1k7.jpg"></p>
 <%end%>

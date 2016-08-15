@@ -13,12 +13,14 @@
 <form method="POST" action="/deposit">
    <input id="hidden" type="hidden" name="_method" value="patch">
    <p>Make a deposit: £<input type="text" name="deposit">
+   Authenticate with password<input type="password" name="password">
    <input type = "submit" value = "Deposit"></p>
 </form>
 
 <form method="POST" action="/withdrawal">
    <input id="hidden" type="hidden" name="_method" value="patch">
    <p>Take some dough out: £<input type="text" name="withdrawal">
+    Authenticate with password<input type="password" name="password">
    <input type = "submit" value = "Withdraw"></p>
 </form>
 

@@ -14,6 +14,7 @@ class ApplicationController < Sinatra::Base
   end
 
   get "/signup" do
+
     erb :signup
   end
 
@@ -28,12 +29,18 @@ class ApplicationController < Sinatra::Base
 
   get '/account' do
     @user = User.find(session[:user_id])
+    session[:incorrect_auth] = false
+    session[:over_drawn] = false
     @session = session
     erb :account
   end
 
 
   get "/login" do
+    session[:incorrect_auth] = false
+    session[:deposit_succesful] = false
+    session[:withdraw_done] = false
+    session[:over_drawn] = false
     erb :login
   end
 
@@ -65,16 +72,25 @@ class ApplicationController < Sinatra::Base
     redirect "/"
   end
 
+  ##Todo: add a checkup on input that it's digits, not letters etc that are in the input
   patch "/deposit" do
     session[:withdraw_done] = false
-    ##Todo: add a checkup on input that it's digits, not letters etc that are in the input
-    deposit = params["deposit"].to_f
+    session[:over_drawn] = false
+    deposit = params[:deposit].to_f
     user = User.find(session[:user_id])
     new_balance = user.balance + deposit
-    @user = user.update_attribute(:balance, new_balance)
-    session[:deposit_succesful] = true
-    redirect '/account'
+    if user.authenticate(params[:password])
+      @user = User.update(session[:user_id], :password => params[:password], :balance => new_balance)
+      session[:deposit_succesful] = true
+      session[:incorrect_auth] = false
+      redirect '/account'
+    else
+      session[:incorrect_auth] = true
+      session[:deposit_succesful] = false
+      redirect '/failure'
+    end
   end
+
 
   patch "/withdrawal" do
     session[:deposit_succesful] = false
@@ -83,9 +99,16 @@ class ApplicationController < Sinatra::Base
     user = User.find(session[:user_id])
     if user.balance >= withdrawal
       new_balance = user.balance - withdrawal
-      @user = user.update_attribute(:balance, new_balance)
-      session[:withdraw_done] = true
-      redirect '/account'
+      if user.authenticate(params[:password])
+        @user = User.update(session[:user_id], :password => params[:password], :balance => new_balance)
+        session[:withdraw_done] = true
+        session[:incorrect_auth] = false
+        redirect '/account'
+      else
+        session[:incorrect_auth] = true
+        session[:withdraw_done] = false
+        redirect '/failure'
+      end
     else
       session[:over_drawn] = true
       session[:withdraw_done] = false
