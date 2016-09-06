@@ -8,6 +8,8 @@ gem "rake"
 gem "bcrypt"
 gem 'require_all'
 gem 'capybara'
+gem 'rack'
+gem 'shotgun'
 gem "rack_session_access"
 gem 'rack-test'
 
